@@ -54,6 +54,7 @@ namespace PriceDownloader.Core
             _wd.FindElement(By.XPath(xpath)).Click();
             System.Threading.Thread.Sleep(50);
             _wd.FindElement(By.XPath(xpath)).SendKeys("");
+            _wd.FindElement(By.XPath(xpath)).Clear();
             System.Threading.Thread.Sleep(50);
             _wd.FindElement(By.XPath(xpath)).SendKeys(textInput);
             Reporter.LogInfo("Entered value [" + _wd.FindElement(By.XPath(xpath)).GetAttribute("value") + "] into field element: " + xpath);
