@@ -29,10 +29,35 @@ namespace PriceDownloader.Core
 
         public void RefreshPage(string expectedPageTitle)
         {
+            for (int i = 0; i <= 6; i++)
+            {
+                if (PageRefreshCompletion(expectedPageTitle))
+                {
+                    Reporter.LogInfo("Refresh the page completed");
+                    return;
+                }
+                else
+                {
+                    System.Threading.Thread.Sleep(500);
+                }
+            }
+            Reporter.LogInfo("Refresh the page failed");
+        }
+
+        private bool PageRefreshCompletion(string expectedPageTitle)
+        {
             _wd.Navigate().Refresh();
             WebDriverWait wait = new WebDriverWait(_wd, TimeSpan.FromSeconds(10));
-            wait.Until((d) => { return d.Title.Contains(expectedPageTitle); });
-            Reporter.LogInfo("Refresh the page");
+
+            try
+            {
+                wait.Until((d) => { return d.Title.Contains(expectedPageTitle); });
+            }
+            catch (Exception)
+            {               
+                return false;
+            }
+            return true;
         }
 
         public void SelectOption(string xpath, string valueToSelect)

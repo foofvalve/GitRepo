@@ -52,11 +52,10 @@ namespace PriceDownloader.Poms
             try
             {
                 var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
+                var fileToCheck = DOWNLOAD_PATH + "CSV-" + asxCode + ".csv";
+                Reporter.LogInfo("Waiting for download file: " + fileToCheck);
                 while (stopwatch.Elapsed.Seconds < 20)
-                {
-                    var fileToCheck = DOWNLOAD_PATH + "CSV-" + asxCode + ".csv";
-                    Reporter.LogInfo("Waiting for download file: " + fileToCheck);
+                {                  
                     if (!File.Exists(fileToCheck))
                     {
                         System.Threading.Thread.Sleep(500);
@@ -64,11 +63,12 @@ namespace PriceDownloader.Poms
                     else
                     {
                         FileInfo f = new FileInfo(fileToCheck);
-                        if (f.Length > 1000)
+                        if (f.Length > 400)
                         {
                             Reporter.LogInfo("*** " + asxCode + " - File downloaded successfully, file size: " + f.Length);
                             return true;
                         }
+                        System.Threading.Thread.Sleep(500);
                     }
                 }
 
