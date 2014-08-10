@@ -71,6 +71,25 @@ namespace PriceDownloader.Data
                 return false;
             }
         }
+
+     
+        public void Insert()
+        {
+            string query = "INSERT INTO `algo`.`prices` (`code`, `date`, `open`, `high`, `low`, `close`, `volume`) VALUES ('AAAF', '" + Convert.ToDateTime("07 Aug 2014").ToString("yyyyMMddHHmmss") + "', '50.11', '50.11', '50.1', '50.11', '51523');";
+
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                //Execute command
+                cmd.ExecuteNonQuery();
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
               
         public List<string>[] Select()
         {
