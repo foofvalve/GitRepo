@@ -73,21 +73,28 @@ namespace PriceDownloader.Data
         }
 
      
-        public void Insert()
+        public void Insert(string code,string date,string open,string high, string low, string close, string volume)
         {
-            string query = "INSERT INTO `algo`.`prices` (`code`, `date`, `open`, `high`, `low`, `close`, `volume`) VALUES ('AAAF', '" + Convert.ToDateTime("07 Aug 2014").ToString("yyyyMMddHHmmss") + "', '50.11', '50.11', '50.1', '50.11', '51523');";
+            var formattedDate = Convert.ToDateTime(date).ToString("yyyyMMddHHmmss");
+            string query = "INSERT INTO `algo`.`prices` (`code`, `date`, `open`, `high`, `low`, `close`, `volume`) " +
+                        string.Format("VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}');", code, formattedDate, open, high, low, close, volume);
 
-            //open connection
             if (this.OpenConnection() == true)
-            {
-                //create command and assign the query and connection from the constructor
+            {  
                 MySqlCommand cmd = new MySqlCommand(query, connection);
 
-                //Execute command
-                cmd.ExecuteNonQuery();
-
-                //close connection
-                this.CloseConnection();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Reporter.LogInfo("Insert in db failed: " + e.Message);
+                }
+                finally
+                {
+                    this.CloseConnection();
+                }
             }
         }
               
