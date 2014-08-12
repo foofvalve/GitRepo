@@ -72,16 +72,21 @@ namespace PriceDownloader.Data
             }
         }
 
-     
-        public void Insert(string code,string date,string open,string high, string low, string close, string volume)
+
+        public string GenerateInsertStatement(string code, string date, string open, string high, string low, string close, string volume)
         {
             var formattedDate = Convert.ToDateTime(date).ToString("yyyyMMddHHmmss");
-            string query = "INSERT INTO `algo`.`prices` (`code`, `date`, `open`, `high`, `low`, `close`, `volume`) " +
+            return "INSERT INTO `algo`.`prices` (`code`, `date`, `open`, `high`, `low`, `close`, `volume`) " +
                         string.Format("VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}');", code, formattedDate, open, high, low, close, volume);
 
+
+        }
+
+        public void RunSqlStatement(string sqlStatement)
+        {
             if (this.OpenConnection() == true)
-            {  
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+            {
+                MySqlCommand cmd = new MySqlCommand(sqlStatement, connection);
 
                 try
                 {
@@ -89,7 +94,7 @@ namespace PriceDownloader.Data
                 }
                 catch (Exception e)
                 {
-                    Reporter.LogInfo("Insert in db failed: " + e.Message);
+                    Reporter.LogInfo("RunSqlStatement in db failed: " + e.Message);
                 }
                 finally
                 {
@@ -97,7 +102,7 @@ namespace PriceDownloader.Data
                 }
             }
         }
-              
+               
         public List<string>[] Select()
         {
             string query = "SELECT * FROM algo.prices";
