@@ -75,6 +75,7 @@
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Core\UserActivity.cs" />
     <Compile Include="Data\DataProvider.cs" />
+    <Compile Include="MoneyManager.cs" />
     <Compile Include="Poms\EndOfDayPrices.cs" />
     <Compile Include="Poms\Login.cs" />
     <Compile Include="Program.cs" />
@@ -84,6 +85,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="StockGeniusAnalyzer.cs" />
+    <Compile Include="StockPrice.cs" />
     <Compile Include="Tests\PriceDownloaderTests.cs" />
   </ItemGroup>
   <ItemGroup>

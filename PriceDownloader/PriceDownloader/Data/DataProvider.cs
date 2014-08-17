@@ -102,51 +102,43 @@ namespace PriceDownloader.Data
                 }
             }
         }
-               
-        public List<string>[] Select()
+
+        public List<StockPrice> RunQuery(string query)
         {
-            string query = "SELECT * FROM algo.prices";
+            Reporter.LogInfo("RunQuery ...");
+            Reporter.LogInfo(query);
 
-            //Create a list to store the result
-            List<string>[] list = new List<string>[3];
-            list[0] = new List<string>();
-            list[1] = new List<string>();
-            list[2] = new List<string>();
+            List<StockPrice> recordSet = new List<StockPrice>();
 
-            //Open connection
             if (this.OpenConnection() == true)
             {
-                //Create Command
                 MySqlCommand cmd = new MySqlCommand(query, connection);
-                //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
-                //Read the data and store them in the list
                 while (dataReader.Read())
                 {
-                    list[0].Add(dataReader[0] + "");
-                    System.Diagnostics.Debug.WriteLine("Adding... " + dataReader[0]);
-                    
-                    list[1].Add(dataReader[1] + "");
-                    System.Diagnostics.Debug.WriteLine("Adding... " + dataReader[1]);
-                    
-                    list[2].Add(dataReader[2] + "");
-                    System.Diagnostics.Debug.WriteLine("Adding... " + dataReader[2]);
+                    StockPrice stockPrice = new StockPrice
+                    {
+                        code = dataReader[0].ToString(),
+                        transcationDate = Convert.ToDateTime(dataReader[1]),
+                        open = Convert.ToDouble(dataReader[2]),
+                        high = Convert.ToDouble(dataReader[3]),
+                        low = Convert.ToDouble(dataReader[4]),
+                        close = Convert.ToDouble(dataReader[5]),
+                        volume = Convert.ToInt64(dataReader[6])
+                    };
+                    recordSet.Add(stockPrice);
+                    Reporter.LogInfo("Added... " + stockPrice.ToString());
                 }
 
-                //close Data Reader
                 dataReader.Close();
-
-                //close Connection
                 this.CloseConnection();
-
-                //return list to be displayed
-                return list;
+                return recordSet;
             }
             else
             {
-                return list;
+                return recordSet;
             }
-        }
+        }      
     }
 }
