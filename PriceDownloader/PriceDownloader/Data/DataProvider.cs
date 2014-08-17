@@ -103,6 +103,51 @@ namespace PriceDownloader.Data
             }
         }
 
+        public List<string> GetAsxCodes()
+        {
+            var qry = "select distinct code from algo.prices where open > 3";
+            Reporter.LogInfo("GetAsxCodes ...");
+            Reporter.LogInfo(qry);
+            List<string> recordSet = new List<string>();
+            
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(qry, connection);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                    recordSet.Add(dataReader[0].ToString());      
+
+                dataReader.Close();
+                this.CloseConnection();
+                return recordSet;
+            }
+            else
+            {
+                return recordSet;
+            }        
+        }
+
+        public string RunQueryReturnSingleCell(string query)
+        {
+            //Reporter.LogInfo("RunQuery ...");
+            //Reporter.LogInfo(query);
+            string qryResult = "";            
+
+            if (!this.OpenConnection())
+                return "";
+            
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataReader dataReader = cmd.ExecuteReader();
+
+            while (dataReader.Read())
+                qryResult =  dataReader[0].ToString();
+       
+            dataReader.Close();
+            this.CloseConnection();
+            return qryResult;      
+        }    
+
         public List<StockPrice> RunQuery(string query)
         {
             Reporter.LogInfo("RunQuery ...");
