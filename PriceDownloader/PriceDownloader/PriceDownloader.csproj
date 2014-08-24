@@ -88,6 +88,7 @@
     <Compile Include="StockGeniusAnalyzer.cs" />
     <Compile Include="StockPrice.cs" />
     <Compile Include="Tests\PriceDownloaderTests.cs" />
+    <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

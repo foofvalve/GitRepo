@@ -127,21 +127,22 @@ namespace PriceDownloader.Data
                 return recordSet;
             }        
         }
-
-        public string RunQueryReturnSingleCell(string query)
+      
+        public Dictionary<string, string> RunQueryReturnSingleRow(string query)
         {
             //Reporter.LogInfo("RunQuery ...");
             //Reporter.LogInfo(query);
-            string qryResult = "";            
+            Dictionary<string, string> qryResult = new Dictionary<string, string>();            
 
             if (!this.OpenConnection())
-                return "";
+                return null;
             
             MySqlCommand cmd = new MySqlCommand(query, connection);
             MySqlDataReader dataReader = cmd.ExecuteReader();
 
             while (dataReader.Read())
-                qryResult =  dataReader[0].ToString();
+                for (int i=0; i<dataReader.FieldCount;i++)                
+                    qryResult.Add(dataReader.GetName(i), dataReader[i].ToString());
        
             dataReader.Close();
             this.CloseConnection();
