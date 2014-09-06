@@ -123,6 +123,15 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Stolen\CandleStickPattern.txt" />
+    <Content Include="Stolen\MAX.txt" />
+    <Content Include="Stolen\MIN.txt" />
+    <Content Include="Stolen\RSI.txt" />
+    <Content Include="Stolen\SMA.txt" />
+    <Content Include="Stolen\Swing.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
