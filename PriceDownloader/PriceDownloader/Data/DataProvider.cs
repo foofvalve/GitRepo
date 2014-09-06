@@ -82,6 +82,41 @@ namespace PriceDownloader.Data
 
         }
 
+        public void InsertPreviousDayData(string code)
+        {
+            var records = RunQuery("SELECT * FROM algo.prices where code='" + code + "' order by date").ToArray();
+            string sqlToRun = "";
+            for (int i = 1; i < records.Length - 1; i++)
+            {
+                sqlToRun = sqlToRun + Environment.NewLine + GenerateUpdateSQLPrevDayData(records[i].code,
+                                                                            records[i].transcationDate,
+                                                                            records[i - 1].open,
+                                                                            records[i - 1].high,
+                                                                            records[i - 1].low,
+                                                                            records[i - 1].close,
+                                                                            records[i - 1].volume);
+            }
+            RunSqlStatement(sqlToRun);            
+        }
+
+        public string GenerateUpdateSQLPrevDayData(string code, DateTime date,
+                                                    double prevOpen,
+                                                    double prevHigh,
+                                                    double prevLow,
+                                                    double prevClose,
+                                                    double prevVol)
+        {
+            var formattedDate = date.ToString("yyyyMMddHHmmss");
+            return "UPDATE algo.prices " +
+                "SET  " +
+                "previous_open = " + prevOpen + ",  " +
+                "previous_high = " + prevHigh + ",  " +
+                "previous_low = " + prevLow + ", " +
+                "previous_close = " + prevClose + ", " +
+                "previous_volume = " + prevVol + " " +
+                "WHERE code = '" + code + "' AND date = '" + formattedDate + "';";
+        }
+
         public void RunSqlStatement(string sqlStatement)
         {
             if (this.OpenConnection() == true)
@@ -174,7 +209,7 @@ namespace PriceDownloader.Data
                         volume = Convert.ToInt64(dataReader[6])
                     };
                     recordSet.Add(stockPrice);
-                    Reporter.LogInfo("Added... " + stockPrice.ToString());
+                    //Reporter.LogInfo("Added... " + stockPrice.ToString());
                 }
 
                 dataReader.Close();
