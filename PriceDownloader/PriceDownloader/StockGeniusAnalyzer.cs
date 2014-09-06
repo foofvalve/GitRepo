@@ -13,6 +13,35 @@ namespace PriceDownloader
         DataProvider _dataProvider;
         List<string> _asxCodes;
 
+        public enum ChartPattern
+        {
+            BearishBeltHold,
+            BearishEngulfing,
+            BearishHarami,
+            BearishHaramiCross,
+            BullishBeltHold,
+            BullishEngulfing,
+            BullishHarami,
+            BullishHaramiCross,
+            DarkCloudCover,
+            Doji,
+            DownsideTasukiGap,
+            EveningStar,
+            FallingThreeMethods,
+            Hammer,
+            HangingMan,
+            InvertedHammer,
+            MorningStar,
+            PiercingLine,
+            RisingThreeMethods,
+            ShootingStar,
+            StickSandwich,
+            ThreeBlackCrows,
+            ThreeWhiteSoldiers,
+            UpsideGapTwoCrows,
+            UpsideTasukiGap,
+        }
+
         public StockGeniusAnalyzer()
         {
             _dataProvider = new DataProvider();
