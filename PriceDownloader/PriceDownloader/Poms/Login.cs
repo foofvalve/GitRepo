@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using PriceDownloader.Core;
+using System.IO;
+
 
 namespace PriceDownloader.Poms
 {
@@ -21,14 +23,16 @@ namespace PriceDownloader.Poms
         {
             webDriver = wd;
             _userActivity = new UserActivity(wd);
+            wd.Manage().Window.Maximize();
         }
 
-        public void DoLogin(string username, string password)
-        {           
-            _userActivity.InputText(txtclientId, username);
-            _userActivity.InputText(txtpassword, password);
+        public void DoLogin()
+        {
+            string[] lines = System.IO.File.ReadAllLines(@"C:\temp\stuff.txt");
+
+            _userActivity.InputText(txtclientId, (Convert.ToInt32(lines[0]) * 5).ToString());
+            _userActivity.InputText(txtpassword, "Qtp" + (Convert.ToInt32(lines[1]) * 5).ToString());
             _userActivity.Click(btnLogin);
-        }
+        }      
     }
-
 }

@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace PriceDownloader.Utils
 {
@@ -38,6 +42,17 @@ namespace PriceDownloader.Utils
                 return (cellValue == "") ? "" : cellValue;
             else
                 return "";
+        }
+
+        public static void GetScreenShot(string filename)
+        {
+            Bitmap bitmap = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, PixelFormat.Format32bppArgb);
+
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                graphics.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, Screen.PrimaryScreen.Bounds.Size, CopyPixelOperation.SourceCopy);
+            }
+            bitmap.Save(@"C:\temp\Screenshots\" + filename + ".bmp");
         }
     }
 }

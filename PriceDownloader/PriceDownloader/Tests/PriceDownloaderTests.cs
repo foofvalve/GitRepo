@@ -29,71 +29,33 @@ namespace PriceDownloader.Tests
         UserActivity _userActivity;
         List<string> _asxCodes;
 
-        //[TestInitialize]
+        [TestInitialize]
         public void SetUp()
         {
             //webDriver = new FirefoxDriver();
             webDriver = new ChromeDriver(@"C:\Program Files (x86)\Google\Chrome\Application\");
             _userActivity = new UserActivity(webDriver);
-            SetupProperDataSet();
+            //SetupProperDataSet();
             //SetupSmallDataSet();
         }
 
-        //[TestMethod]
-        public void LoopThroughDirectory()
-        {
-            DataProvider dataProvider = new DataProvider();
-            var directoryPath = @"C:\temp\Data";
-            
-            string[] files = Directory.GetFiles(directoryPath, "*.csv", SearchOption.AllDirectories);
-            for (int i = 0; i < files.Length; i++)
-            {
-                string[] allLines = File.ReadAllLines(files[i]);
-                string sqlString = "";
-                foreach(string line in allLines)
-                {
-                    string[] priceComponents = line.Split(',');
-                    if (!priceComponents[0].Equals("Security Code"))
-                    {
-                        sqlString += dataProvider.GenerateInsertStatement(priceComponents[0].ToString(), priceComponents[1].ToString(), priceComponents[2].ToString(), priceComponents[3].ToString(), priceComponents[4].ToString(), priceComponents[5].ToString(), priceComponents[6].ToString());
-                    }
-                }
-                dataProvider.RunSqlStatement(sqlString);
-            } 
-        }
-
-        //[TestMethod]
-        public void ReadRecordsFromDb()
-        {
-            DataProvider dataProvider = new DataProvider();
-            var records = dataProvider.RunQuery("SELECT * FROM algo.prices where code='BHP'");
-        }
-
-        //[TestMethod]
-        public void GetMaxHighUsingDateRange()
-        {
-            StockGeniusAnalyzer genius = new StockGeniusAnalyzer();
-            genius.FindStockNearingDayHigh();
-        }
-
         [TestMethod]
-        public void InsertPreviousDays()
+        public void TestTakingScreenShot()
         {
-            DataProvider dataProvider = new DataProvider();
-            var asxCodes = dataProvider.GetAsxCodes();
-            foreach (var asxCode in asxCodes)
-                dataProvider.InsertPreviousDayData(asxCode);         
+            SetupSymbolsForScreenshot();
+            _userActivity.GoToUrl("https://www.commsec.com.au/", "CommSec");
+
+            Login login = new Login(webDriver);
+            login.DoLogin();
+
+            foreach (var asxCode in _asxCodes)
+            {
+                _userActivity.GoToUrl("https://www2.commsec.com.au/Private/MarketPrices/Charts/Charts.aspx?stockCode=" + asxCode, "CommSec | Quotes");
+                Utils.CommonUtils.GetScreenShot(asxCode);
+            }            
         }
 
-        //[TestMethod]
-        public void ImportCSV()
-        {
-            DataProvider dataProvider = new DataProvider();
-
-            dataProvider.GenerateInsertStatement("abc", "2014-08-08 00:00:00", "5.10", "5.12", "4.3", "4.8", "45330202");
-            
-        }
-
+    
         //[TestMethod]
         public void RunUITest()
         {
@@ -108,7 +70,7 @@ namespace PriceDownloader.Tests
             _userActivity.GoToUrl("https://www.commsec.com.au/", "CommSec");
 
             Login login = new Login(webDriver);
-            login.DoLogin("1241235112352876155121235", "1235q1235123521t12351235p12351234145");
+            login.DoLogin();
 
             _userActivity.GoToUrl("https://www2.commsec.com.au/Private/Charts/EndOfDayPrices.aspx", "CommSec | End of Day Prices");
             EndOfDayPrices endOfDayPrices = new EndOfDayPrices(webDriver);
@@ -121,6 +83,15 @@ namespace PriceDownloader.Tests
         public void Teardown()
         {
             webDriver.Quit();  
+        }
+
+        private void SetupSymbolsForScreenshot()
+        {
+            _asxCodes = new List<string> { 
+            "BHP",
+            "WOW",
+            "RIO",
+             };
         }
 
         private void SetupSmallDataSet()
