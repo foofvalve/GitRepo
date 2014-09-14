@@ -76,17 +76,45 @@ namespace PriceDownloader.Data
         public string GenerateInsertStatement(string code, string date, string open, string high, string low, string close, string volume)
         {
             var formattedDate = Convert.ToDateTime(date).ToString("yyyyMMddHHmmss");
-            return "INSERT INTO `algo`.`prices` (`code`, `date`, `open`, `high`, `low`, `close`, `volume`) " +
-                        string.Format("VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}');", code, formattedDate, open, high, low, close, volume);
+            return "INSERT INTO `algo`.`prices` (`code`, `date`, `open`, `high`, `low`, `close`, `volume`, `previous_open`, `previous_high`, `previous_low`, `previous_close`, `previous_volume`, `symbol`) " +
+                        string.Format("VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}','0','0','0','0','0','{7}');", code, formattedDate, open, high, low, close, volume, code) + Environment.NewLine;
 
 
         }
+        //Doji
+
+        /*
+        SELECT * 
+        FROM algo.prices b
+        where b.open=b.close 
+        and b.date='2014-05-02 00:00:00' and all_ords='Y'
+        and b.previous_open<>0
+        and b.volume >50000
+        and b.high >b.close
+
+         * */
+
+        //Bullish Harami
+        /* 
+            SELECT * 
+            FROM algo.prices b
+            where b.date='2014-09-12 00:00:00' 
+            and b.volume >50000
+            and b.previous_open <> 0
+            and b.previous_close < b.previous_open
+            and b.close > b.open
+            and b.open > b.previous_close
+            and b.close < b.previous_open
+            and b.high < b.previous_open
+            and b.low > b.previous_close
+         * **/
 
         public void InsertPreviousDayData(string code)
         {
-            var records = RunQuery("SELECT * FROM algo.prices where code='" + code + "' order by date").ToArray();
+            var dateRange = "date<='2014-09-12 00:00:00' and date>='2014-09-08 00:00:00' and ";
+            var records = RunQuery("SELECT * FROM algo.prices where " + dateRange + " code='" + code + "' order by date").ToArray();
             string sqlToRun = "";
-            for (int i = 1; i < records.Length - 1; i++)
+            for (int i = 1; i < records.Length ; i++)
             {
                 sqlToRun = sqlToRun + Environment.NewLine + GenerateUpdateSQLPrevDayData(records[i].code,
                                                                             records[i].transcationDate,

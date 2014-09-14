@@ -52,7 +52,9 @@ namespace PriceDownloader.Utils
             {
                 graphics.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, Screen.PrimaryScreen.Bounds.Size, CopyPixelOperation.SourceCopy);
             }
-            bitmap.Save(@"C:\temp\Screenshots\" + filename + ".bmp");
+            var fileName = @"C:\temp\Screenshots\" + filename + ".bmp";
+            bitmap.Save(fileName);
+            Console.WriteLine("Screenshoted : " + fileName);
         }
     }
 }

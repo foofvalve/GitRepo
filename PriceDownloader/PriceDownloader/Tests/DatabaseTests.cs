@@ -13,7 +13,7 @@ namespace PriceDownloader.Tests
     {
         List<string> _asxCodes;
 
-        //[TestMethod]
+        [TestMethod]
         public void LoopThroughDirectory()
         {
             DataProvider dataProvider = new DataProvider();
@@ -32,6 +32,7 @@ namespace PriceDownloader.Tests
                         sqlString += dataProvider.GenerateInsertStatement(priceComponents[0].ToString(), priceComponents[1].ToString(), priceComponents[2].ToString(), priceComponents[3].ToString(), priceComponents[4].ToString(), priceComponents[5].ToString(), priceComponents[6].ToString());
                     }
                 }
+                Console.WriteLine(sqlString);
                 dataProvider.RunSqlStatement(sqlString);
             }
         }
@@ -50,7 +51,7 @@ namespace PriceDownloader.Tests
             genius.FindStockNearingDayHigh();
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void InsertPreviousDays()
         {
             DataProvider dataProvider = new DataProvider();
